@@ -1,0 +1,13 @@
+{
+	"globals": {
+		"appName": "trip-logger",
+		"region": "us-east-1",
+		"appDescription": "A stack for a Travel pic viewer"
+	},
+	"environments": [
+		{
+			"environment": "develop",
+			"branchName": "develop"
+		}
+	]
+}
