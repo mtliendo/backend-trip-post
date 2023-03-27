@@ -4,6 +4,7 @@ export type CDKContext = {
 	region: string
 	environment: envNameContext
 	branchName: branchNameContext
+	s3AllowedOrigins: [string]
 }
 
 export type envNameContext = 'develop'

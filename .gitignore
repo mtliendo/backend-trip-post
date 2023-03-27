@@ -2,8 +2,9 @@
 !jest.config.js
 *.d.ts
 !cdk.context.d.ts
+!lib/**/*
 node_modules
-
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+.DS_Store

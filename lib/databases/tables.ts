@@ -25,9 +25,7 @@ export function createTravelTable(
 	return travelTable
 }
 
-type CreateUserTableProps = BaseTableProps & {
-	addUserFunc: NodejsFunction
-}
+type CreateUserTableProps = BaseTableProps & {}
 export function createUserTable(
 	scope: Construct,
 	props: CreateUserTableProps
@@ -39,8 +37,6 @@ export function createUserTable(
 		billingMode: awsDynamodb.BillingMode.PAY_PER_REQUEST,
 		partitionKey: { name: 'id', type: awsDynamodb.AttributeType.STRING },
 	})
-
-	userTable.grantWriteData(props.addUserFunc)
 
 	return userTable
 }

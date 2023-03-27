@@ -2,10 +2,10 @@ import { CDKContext } from './../cdk.context.d'
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { createTravelTable, createUserTable } from './databases/tables'
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
-import path = require('path')
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import { createTravelUserpool } from './cognito/auth'
+import { createTripPicsBucket } from './s3/tripPics'
+import { createAddUserPostConfirmation } from './functions/addUserPostConfirmation/construct'
+import { createAppSyncTripAPI } from './api/appsync'
 
 export class BackendTripPostStack extends cdk.Stack {
 	constructor(
@@ -16,18 +16,6 @@ export class BackendTripPostStack extends cdk.Stack {
 	) {
 		super(scope, id, props)
 		// our code will go here
-		const addUserFunc = new NodejsFunction(this, 'addUserFunc', {
-			functionName: `${context.appName}-${context.environment}-addUserFunc`,
-			runtime: Runtime.NODEJS_16_X,
-			handler: 'handler',
-			entry: path.join(__dirname, `./functions/addUser/main.ts`),
-		})
-
-		const cognitoAuth = createTravelUserpool(this, {
-			appName: context.appName,
-			env: context.environment,
-			addUserPostConfirmation: addUserFunc,
-		})
 
 		const travelDB = createTravelTable(this, {
 			appName: context.appName,
@@ -37,7 +25,34 @@ export class BackendTripPostStack extends cdk.Stack {
 		const userDB = createUserTable(this, {
 			appName: context.appName,
 			env: context.environment,
-			addUserFunc,
+		})
+
+		const addUserFunc = createAddUserPostConfirmation(this, {
+			appName: context.appName,
+			env: context.environment,
+			userTable: userDB,
+		})
+
+		const cognitoAuth = createTravelUserpool(this, {
+			appName: context.appName,
+			env: context.environment,
+			addUserPostConfirmation: addUserFunc,
+		})
+
+		const travelAPI = createAppSyncTripAPI(this, {
+			appName: context.appName,
+			env: context.environment,
+			unauthenticatedRole: cognitoAuth.identityPool.unauthenticatedRole,
+			userpool: cognitoAuth.userPool,
+			travelDB,
+			userDB,
+		})
+
+		const tripPicsBucket = createTripPicsBucket(this, {
+			appName: context.appName,
+			env: context.environment,
+			allowedOrigins: context.s3AllowedOrigins,
+			authenticatedRole: cognitoAuth.identityPool.authenticatedRole,
 		})
 	}
 }

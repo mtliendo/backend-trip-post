@@ -1,0 +1,45 @@
+type Query {
+	getTrip(id: ID!): Trip @aws_cognito_user_pools @aws_iam
+	listTrips: [Trip]! @aws_cognito_user_pools @aws_iam
+	getUser(id: ID!): User @aws_cognito_user_pools
+}
+
+type Mutation {
+	createTrip(input: TripCreateInput!): Trip @aws_cognito_user_pools
+	updateTrip(input: TripUpdateInput!): Trip @aws_cognito_user_pools
+	deleteTrip(id: ID!): Trip @aws_cognito_user_pools
+}
+
+type Subscription {
+	onTripCreate: Trip @aws_subscribe(mutations: ["createTrip"])
+}
+
+type Trip @aws_cognito_user_pools @aws_iam {
+	id: ID!
+	createdAt: AWSDateTime!
+	updatedAt: AWSDateTime!
+	title: String!
+	description: String!
+	imgKey: String!
+}
+
+type User @aws_cognito_user_pools {
+	id: ID!
+	createdAt: AWSDateTime! # 2023-02-16T16:07:14.189Z
+	updatedAt: AWSDateTime!
+	username: String!
+	email: AWSEmail!
+}
+
+input TripCreateInput {
+	title: String!
+	description: String!
+	imgKey: String!
+}
+
+input TripUpdateInput {
+	id: ID!
+	title: String!
+	description: String!
+	imgKey: String!
+}
