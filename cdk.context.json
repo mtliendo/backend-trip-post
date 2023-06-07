@@ -9,6 +9,11 @@
 			"environment": "develop",
 			"branchName": "develop",
 			"s3AllowedOrigins": ["*"]
+		},
+		{
+			"environment": "production",
+			"branchName": "main",
+			"s3AllowedOrigins": ["*"]
 		}
 	]
 }
