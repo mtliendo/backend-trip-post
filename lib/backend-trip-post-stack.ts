@@ -54,5 +54,26 @@ export class BackendTripPostStack extends cdk.Stack {
 			allowedOrigins: context.s3AllowedOrigins,
 			authenticatedRole: cognitoAuth.identityPool.authenticatedRole,
 		})
+
+		new cdk.CfnOutput(this, 'tripPicsBucketName', {
+			value: tripPicsBucket.fileStorageBucket.bucketName,
+		})
+
+		new cdk.CfnOutput(this, 'Region', {
+			value: process.env.CDK_DEFAULT_REGION!,
+		})
+
+		new cdk.CfnOutput(this, 'UserpoolId', {
+			value: cognitoAuth.userPool.userPoolId,
+		})
+		new cdk.CfnOutput(this, 'UserpoolClientId', {
+			value: cognitoAuth.userPoolClient.userPoolClientId,
+		})
+		new cdk.CfnOutput(this, 'IdentityPoolId', {
+			value: cognitoAuth.identityPool.identityPoolId,
+		})
+		new cdk.CfnOutput(this, 'AppSyncURL', {
+			value: travelAPI.graphqlUrl,
+		})
 	}
 }
