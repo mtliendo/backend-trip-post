@@ -22,10 +22,11 @@ export function createTravelUserpool(
 		{
 			userPoolName: `${props.appName}-${props.env}-userpool`,
 			selfSignUpEnabled: true,
+			autoVerify: { email: true },
 			lambdaTriggers: {
 				postConfirmation: props.addUserPostConfirmation,
 			},
-			accountRecovery: awsCognito.AccountRecovery.EMAIL_ONLY,
+			accountRecovery: awsCognito.AccountRecovery.PHONE_AND_EMAIL,
 			userVerification: {
 				emailStyle: awsCognito.VerificationEmailStyle.CODE,
 			},

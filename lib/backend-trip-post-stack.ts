@@ -75,5 +75,8 @@ export class BackendTripPostStack extends cdk.Stack {
 		new cdk.CfnOutput(this, 'AppSyncURL', {
 			value: travelAPI.graphqlUrl,
 		})
+		new cdk.CfnOutput(this, 'CloudfrontURL', {
+			value: tripPicsBucket.fileStorageBucketCFDistribution.domainName,
+		})
 	}
 }
